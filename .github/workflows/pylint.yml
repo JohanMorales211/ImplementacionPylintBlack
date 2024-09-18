@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Pylint on the whole project
         run: |
-          pylint /FastAPI/*.py
+          pylint app/**/*.py
 
       - name: Analysing the code with pylint
         run: |
