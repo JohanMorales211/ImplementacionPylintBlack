@@ -25,7 +25,7 @@ class DoctorService:
             specialty (str): The specialty of the doctor.
 
         Returns:
-            Doctor: The created doctor instance.
+            Doctor: The created doctor instance as a Pydantic model.
         """
         doctor_instance = DoctorModel.create(name=name, specialty=specialty)
         return Doctor(
@@ -43,7 +43,7 @@ class DoctorService:
             doctor_id (int): The ID of the doctor to retrieve.
 
         Returns:
-            Optional[Doctor]: The doctor instance if found, else None.
+            Optional[Doctor]: The doctor instance as a Pydantic model if found, else None.
         """
         try:
             doctor_instance = DoctorModel.get_by_id(doctor_id)
@@ -68,21 +68,27 @@ class DoctorService:
             specialty (Optional[str]): The new specialty of the doctor.
 
         Returns:
-            Optional[Doctor]: The updated doctor instance if successful, else None.
+            Optional[Doctor]: The updated doctor instance as a Pydantic model if successful,
+            else None.
+
+        Raises:
+            ValueError: If the doctor with the given ID does not exist.
         """
-        doctor_instance = DoctorService.get_doctor_by_id(doctor_id)
-        if doctor_instance:
+        try:
+            doctor_instance = DoctorModel.get_by_id(doctor_id)  # Obtain the DB model directly
             if name:
                 doctor_instance.name = name
             if specialty:
                 doctor_instance.specialty = specialty
-            doctor_instance.save()
+            doctor_instance.save()  # Save changes to the database
+
             return Doctor(
                 id=doctor_instance.id,
                 name=doctor_instance.name,
                 specialty=doctor_instance.specialty,
             )
-        return None
+        except DoesNotExist:
+            return None
 
     @staticmethod
     def delete_doctor(doctor_id: int) -> bool:
@@ -95,8 +101,9 @@ class DoctorService:
         Returns:
             bool: True if the doctor was deleted, else False.
         """
-        doctor_instance = DoctorService.get_doctor_by_id(doctor_id)
-        if doctor_instance:
+        try:
+            doctor_instance = DoctorModel.get_by_id(doctor_id)
             doctor_instance.delete_instance()
             return True
-        return False
+        except DoesNotExist:
+            return False

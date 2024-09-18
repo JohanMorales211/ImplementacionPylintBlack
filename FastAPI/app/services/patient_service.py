@@ -36,12 +36,8 @@ class PatientService:
             patient_instance = PatientModel.create(
                 name=name, date_of_birth=date_of_birth, doctor_id=doctor_instance
             )
-            return Patient(
-                id=patient_instance.id,
-                name=patient_instance.name,
-                date_born=patient_instance.date_of_birth,
-                doctor_id=patient_instance.doctor_id.id,
-            )
+            # Using from_orm to convert Peewee model to Pydantic model
+            return Patient.from_orm(patient_instance)
         except DoesNotExist as exc:
             raise ValueError(f"Doctor with id {doctor_id} not found") from exc
 
@@ -58,12 +54,8 @@ class PatientService:
         """
         try:
             patient_instance = PatientModel.get_by_id(patient_id)
-            return Patient(
-                id=patient_instance.id,
-                name=patient_instance.name,
-                date_born=patient_instance.date_of_birth,
-                doctor_id=patient_instance.doctor_id.id,
-            )
+            # Using from_orm to convert Peewee model to Pydantic model
+            return Patient.from_orm(patient_instance)
         except DoesNotExist:
             return None
 
@@ -89,8 +81,10 @@ class PatientService:
         Raises:
             ValueError: If the doctor with the given ID does not exist.
         """
-        patient_instance = PatientService.get_patient_by_id(patient_id)
-        if patient_instance:
+        try:
+            patient_instance = PatientModel.get_by_id(patient_id)
+
+            # Update fields only if new values are provided
             if name:
                 patient_instance.name = name
             if date_of_birth:
@@ -101,14 +95,12 @@ class PatientService:
                     patient_instance.doctor_id = doctor_instance
                 except DoesNotExist as exc:
                     raise ValueError(f"Doctor with id {doctor_id} not found") from exc
+
             patient_instance.save()
-            return Patient(
-                id=patient_instance.id,
-                name=patient_instance.name,
-                date_born=patient_instance.date_of_birth,
-                doctor_id=patient_instance.doctor_id.id,
-            )
-        return None
+            return Patient.from_orm(patient_instance)
+
+        except DoesNotExist:
+            return None
 
     @staticmethod
     def delete_patient(patient_id: int) -> bool:
@@ -121,8 +113,10 @@ class PatientService:
         Returns:
             bool: True if the patient was deleted, else False.
         """
-        patient_instance = PatientService.get_patient_by_id(patient_id)
-        if patient_instance:
+        try:
+            # Check if the patient exists before attempting to delete
+            patient_instance = PatientModel.get_by_id(patient_id)
             patient_instance.delete_instance()
             return True
-        return False
+        except DoesNotExist:
+            return False
