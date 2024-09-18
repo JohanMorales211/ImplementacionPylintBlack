@@ -1,6 +1,10 @@
-from models.patient import Patient  # Importamos el modelo Patient
-from models.doctor import Doctor  # Importamos el modelo Doctor
+# app/patient_services.py
+
+from typing import Optional
 from peewee import DoesNotExist
+from database import PatientModel, DoctorModel
+from models.patient import Patient
+from models.doctor import Doctor
 
 class PatientService:
     """Service layer for Patient operations"""
@@ -17,13 +21,19 @@ class PatientService:
         
         Returns:
             Patient: The created patient instance.
+        
+        Raises:
+            ValueError: If the doctor with the given ID does not exist.
         """
-        doctor_instance = Doctor.get_by_id(doctor_id)  # Obtener el doctor por ID
-        patient_instance = Patient.create(name=name, date_of_birth=date_of_birth, doctor_id=doctor_instance)
-        return patient_instance
+        try:
+            doctor_instance = DoctorModel.get_by_id(doctor_id)  # Obtener el doctor por ID
+            patient_instance = PatientModel.create(name=name, date_of_birth=date_of_birth, doctor_id=doctor_instance)
+            return Patient(id=patient_instance.id, name=patient_instance.name, date_born=patient_instance.date_of_birth, doctor_id=patient_instance.doctor_id.id)
+        except DoesNotExist:
+            raise ValueError(f"Doctor with id {doctor_id} not found")
 
     @staticmethod
-    def get_patient_by_id(patient_id: int) -> Patient:
+    def get_patient_by_id(patient_id: int) -> Optional[Patient]:
         """
         Retrieve a patient by ID.
         
@@ -31,27 +41,30 @@ class PatientService:
             patient_id (int): The ID of the patient to retrieve.
         
         Returns:
-            Patient or None: The patient instance if found, else None.
+            Optional[Patient]: The patient instance if found, else None.
         """
         try:
-            patient_instance = Patient.get(Patient.id == patient_id)
-            return patient_instance
+            patient_instance = PatientModel.get_by_id(patient_id)
+            return Patient(id=patient_instance.id, name=patient_instance.name, date_born=patient_instance.date_of_birth, doctor_id=patient_instance.doctor_id.id)
         except DoesNotExist:
             return None
 
     @staticmethod
-    def update_patient(patient_id: int, name: str = None, date_of_birth: str = None, doctor_id: int = None) -> Patient:
+    def update_patient(patient_id: int, name: Optional[str] = None, date_of_birth: Optional[str] = None, doctor_id: Optional[int] = None) -> Optional[Patient]:
         """
         Update an existing patient by ID.
         
         Args:
             patient_id (int): The ID of the patient to update.
-            name (str, optional): The new name of the patient.
-            date_of_birth (str, optional): The new birthdate of the patient.
-            doctor_id (int, optional): The new doctor's ID.
+            name (Optional[str]): The new name of the patient.
+            date_of_birth (Optional[str]): The new birthdate of the patient.
+            doctor_id (Optional[int]): The new doctor's ID.
         
         Returns:
-            Patient or None: The updated patient instance if successful, else None.
+            Optional[Patient]: The updated patient instance if successful, else None.
+        
+        Raises:
+            ValueError: If the doctor with the given ID does not exist.
         """
         patient_instance = PatientService.get_patient_by_id(patient_id)
         if patient_instance:
@@ -60,9 +73,13 @@ class PatientService:
             if date_of_birth:
                 patient_instance.date_of_birth = date_of_birth
             if doctor_id:
-                patient_instance.doctor_id = Doctor.get_by_id(doctor_id)
+                try:
+                    doctor_instance = DoctorModel.get_by_id(doctor_id)
+                    patient_instance.doctor_id = doctor_instance
+                except DoesNotExist:
+                    raise ValueError(f"Doctor with id {doctor_id} not found")
             patient_instance.save()
-            return patient_instance
+            return Patient(id=patient_instance.id, name=patient_instance.name, date_born=patient_instance.date_of_birth, doctor_id=patient_instance.doctor_id.id)
         return None
 
     @staticmethod
@@ -81,3 +98,4 @@ class PatientService:
             patient_instance.delete_instance()
             return True
         return False
+
