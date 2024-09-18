@@ -19,7 +19,7 @@ DATABASE = MySQLDatabase(
     port=int(os.getenv("MYSQL_PORT")),
 )
 
-
+# pylint: disable=too-few-public-methods
 class UserModel(Model):
     """Represents a user with attributes such as username, email, and password."""
 
