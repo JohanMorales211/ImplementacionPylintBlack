@@ -20,31 +20,29 @@ DATABASE = MySQLDatabase(
 )
 
 # pylint: disable=too-few-public-methods
-class UserModel(Model):
-    """Represents a user with attributes such as username, email, and password."""
+class DoctorModel(Model):
+    """Represents a doctor with attributes such as name and specialty."""
 
     id = AutoField(primary_key=True)
-    username = CharField(max_length=50)
-    email = CharField(max_length=50)
-    password = CharField(max_length=50)
+    name = CharField(max_length=100)
+    specialty = CharField(max_length=100)
 
     class Meta:
-        """Meta information for the UserModel."""
-
+        """Meta information for the DoctorModel."""
         database = DATABASE
-        table_name = "users"
+        table_name = "doctors"
 
 
-class ProfileModel(Model):
-    """Represents a user's profile with attributes such as user_id, profile photo, and biography."""
+# pylint: disable=too-few-public-methods
+class PatientModel(Model):
+    """Represents a patient with attributes such as name, date of birth, and doctor (doctor_id)."""
 
     id = AutoField(primary_key=True)
-    user_id = ForeignKeyField(UserModel, backref="profiles")
-    profile_photo = CharField(max_length=255)
-    biography = CharField(max_length=500)
+    name = CharField(max_length=100)
+    date_of_birth = DateField()
+    doctor_id = ForeignKeyField(DoctorModel, backref="patients")
 
     class Meta:
-        """Meta information for the ProfileModel."""
-
+        """Meta information for the PatientModel."""
         database = DATABASE
-        table_name = "profiles"
+        table_name = "patients"
