@@ -17,6 +17,7 @@ DATABASE = MySQLDatabase(
     password=os.getenv("MYSQL_PASSWORD"),
     host=os.getenv("MYSQL_HOST"),
     port=int(os.getenv("MYSQL_PORT")),
+
 )
 
 # pylint: disable=too-few-public-methods

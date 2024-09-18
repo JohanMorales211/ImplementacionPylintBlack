@@ -18,8 +18,8 @@ business logic related to patients.
 """
 
 from fastapi import APIRouter, HTTPException
-from services.patient_service import PatientService  # pylint: disable=import-error
-from models.patient import Patient  # pylint: disable=import-error
+from app.services.patient_service import PatientService  # pylint: disable=import-error
+from app.models.patient import Patient  # pylint: disable=import-error
 
 router = APIRouter()
 
