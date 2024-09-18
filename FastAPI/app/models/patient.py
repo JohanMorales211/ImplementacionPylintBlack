@@ -1,16 +1,8 @@
 """
-This module contains the Doctor and Patient models.
+This module contains the Patient model.
 """
 
 from pydantic import BaseModel
-
-class Doctor(BaseModel):
-    """
-    Doctor model representing a doctor with an id, name, and specialty.
-    """
-    id: int
-    name: str
-    specialty: str
 
 class Patient(BaseModel):
     """
