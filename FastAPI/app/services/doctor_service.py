@@ -1,3 +1,6 @@
+from models.doctor import Doctor  # Importamos el modelo Doctor correctamente
+from peewee import DoesNotExist
+
 class DoctorService:
     """Service layer for Doctor operations"""
 
