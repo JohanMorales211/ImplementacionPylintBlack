@@ -18,10 +18,11 @@ business logic related to patients.
 """
 
 from fastapi import APIRouter, HTTPException
-from services.patient_service import PatientService
-from models.patient import Patient
+from services.patient_service import PatientService  # pylint: disable=import-error
+from models.patient import Patient  # pylint: disable=import-error
 
 router = APIRouter()
+
 
 @router.post("/patients/", response_model=Patient)
 def create_patient(name: str, date_of_birth: str, doctor_id: int) -> Patient:
@@ -38,6 +39,7 @@ def create_patient(name: str, date_of_birth: str, doctor_id: int) -> Patient:
     """
     patient = PatientService.create_patient(name, date_of_birth, doctor_id)
     return patient
+
 
 @router.get("/patients/{patient_id}", response_model=Patient)
 def get_patient(patient_id: int) -> Patient:
@@ -57,6 +59,7 @@ def get_patient(patient_id: int) -> Patient:
     if patient:
         return patient
     raise HTTPException(status_code=404, detail="Patient not found")
+
 
 @router.put("/patients/{patient_id}", response_model=Patient)
 def update_patient(
@@ -81,6 +84,7 @@ def update_patient(
     if patient:
         return patient
     raise HTTPException(status_code=404, detail="Patient not found")
+
 
 @router.delete("/patients/{patient_id}")
 def delete_patient(patient_id: int) -> dict:

@@ -32,9 +32,7 @@ class PatientService:
             ValueError: If the doctor with the given ID does not exist.
         """
         try:
-            doctor_instance = DoctorModel.get_by_id(
-                doctor_id
-            )
+            doctor_instance = DoctorModel.get_by_id(doctor_id)
             patient_instance = PatientModel.create(
                 name=name, date_of_birth=date_of_birth, doctor_id=doctor_instance
             )

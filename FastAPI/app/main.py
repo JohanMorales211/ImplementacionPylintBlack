@@ -6,7 +6,7 @@ registers routers for different routes, and includes the API documentation.
 """
 
 from fastapi import FastAPI
-from routes import doctor_router, patient_router
+from routes import doctor_router, patient_router  # pylint: disable=import-error
 
 app = FastAPI()
 

@@ -1,14 +1,30 @@
+# config.py
+
 """
-    Configuration class for the application.
+Configuration class for the application.
+
+This class is responsible for loading and providing configuration settings
+for the application. It uses environment variables to set the database
+connection details and other sensitive information. If an environment variable
+is not set, a default value is used.
+
+Attributes:
+    DATABASE_HOST (str): The hostname of the database server.
+    DATABASE_PORT (int): The port number of the database server.
+    DATABASE_USER (str): The username for the database connection.
+    DATABASE_PASSWORD (str): The password for the database connection.
+    DATABASE_NAME (str): The name of the database.
+    DATABASE_URL (str): The URL for the database connection.
+    SECRET_KEY (str): The secret key used for encryption and session management.
+    API_KEY (str): The API key used for accessing external services.
 """
 
 import os
-
 from dotenv import load_dotenv
 
 load_dotenv()
 
-
+# pylint: disable=too-few-public-methods
 class Config:
     """
     Configuration class for the application.

@@ -1,5 +1,3 @@
-# app/doctor_service.py
-
 """
 Service layer for Doctor operations.
 
@@ -9,9 +7,9 @@ the `Doctor` Pydantic model for data validation.
 """
 
 from typing import Optional
-from app.database import DoctorModel
-from app.models.doctor import Doctor
-from peewee import DoesNotExist
+from peewee import DoesNotExist  # pylint: disable=import-error
+from app.database import DoctorModel  # pylint: disable=import-error
+from app.models.doctor import Doctor  # pylint: disable=import-error
 
 
 class DoctorService:

@@ -5,7 +5,7 @@ using Peewee ORM and environment variables.
 
 import os
 from dotenv import load_dotenv
-from peewee import MySQLDatabase, Model, AutoField, CharField, ForeignKeyField
+from peewee import MySQLDatabase, Model, AutoField, CharField, ForeignKeyField, DateField
 
 # Load environment variables from the .env file
 load_dotenv()
