@@ -1,4 +1,4 @@
-from doctor import doctor  # Importamos el modelo ORM correctamente desde doctor.py
+from models import doctor  # Importamos el modelo ORM correctamente desde doctor.py
 from peewee import DoesNotExist
 
 class DoctorService:
