@@ -1,11 +1,12 @@
-from models import patient, doctor  # Importamos los modelos correctos
+from models.patient import Patient  # Importamos el modelo Patient
+from models.doctor import Doctor  # Importamos el modelo Doctor
 from peewee import DoesNotExist
 
 class PatientService:
     """Service layer for Patient operations"""
 
     @staticmethod
-    def create_patient(name: str, date_of_birth: str, doctor_id: int) -> patient:
+    def create_patient(name: str, date_of_birth: str, doctor_id: int) -> Patient:
         """
         Create a new patient.
         
@@ -15,14 +16,14 @@ class PatientService:
             doctor_id (int): The ID of the assigned doctor.
         
         Returns:
-            patient: The created patient instance.
+            Patient: The created patient instance.
         """
-        doctor_instance = doctor.get_by_id(doctor_id)
-        patient_instance = patient.create(name=name, date_of_birth=date_of_birth, doctor_id=doctor_instance)
+        doctor_instance = Doctor.get_by_id(doctor_id)  # Obtener el doctor por ID
+        patient_instance = Patient.create(name=name, date_of_birth=date_of_birth, doctor_id=doctor_instance)
         return patient_instance
 
     @staticmethod
-    def get_patient_by_id(patient_id: int) -> patient:
+    def get_patient_by_id(patient_id: int) -> Patient:
         """
         Retrieve a patient by ID.
         
@@ -30,16 +31,16 @@ class PatientService:
             patient_id (int): The ID of the patient to retrieve.
         
         Returns:
-            patient or None: The patient instance if found, else None.
+            Patient or None: The patient instance if found, else None.
         """
         try:
-            patient_instance = patient.get(patient.id == patient_id)
+            patient_instance = Patient.get(Patient.id == patient_id)
             return patient_instance
         except DoesNotExist:
             return None
 
     @staticmethod
-    def update_patient(patient_id: int, name: str = None, date_of_birth: str = None, doctor_id: int = None) -> patient:
+    def update_patient(patient_id: int, name: str = None, date_of_birth: str = None, doctor_id: int = None) -> Patient:
         """
         Update an existing patient by ID.
         
@@ -50,7 +51,7 @@ class PatientService:
             doctor_id (int, optional): The new doctor's ID.
         
         Returns:
-            patient or None: The updated patient instance if successful, else None.
+            Patient or None: The updated patient instance if successful, else None.
         """
         patient_instance = PatientService.get_patient_by_id(patient_id)
         if patient_instance:
@@ -59,7 +60,7 @@ class PatientService:
             if date_of_birth:
                 patient_instance.date_of_birth = date_of_birth
             if doctor_id:
-                patient_instance.doctor_id = doctor.get_by_id(doctor_id)
+                patient_instance.doctor_id = Doctor.get_by_id(doctor_id)
             patient_instance.save()
             return patient_instance
         return None

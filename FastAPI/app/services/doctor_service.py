@@ -1,11 +1,8 @@
-from models import doctor  # Importamos el modelo ORM correctamente desde doctor.py
-from peewee import DoesNotExist
-
 class DoctorService:
     """Service layer for Doctor operations"""
 
     @staticmethod
-    def create_doctor(name: str, specialty: str) -> doctor:
+    def create_doctor(name: str, specialty: str) -> Doctor:
         """
         Create a new doctor.
         
@@ -14,13 +11,13 @@ class DoctorService:
             specialty (str): The doctor's specialty.
         
         Returns:
-            doctor: The created doctor instance.
+            Doctor: The created doctor instance.
         """
-        doctor_instance = doctor.create(name=name, specialty=specialty)
+        doctor_instance = Doctor.create(name=name, specialty=specialty)
         return doctor_instance
 
     @staticmethod
-    def get_doctor_by_id(doctor_id: int) -> doctor:
+    def get_doctor_by_id(doctor_id: int) -> Doctor:
         """
         Retrieve a doctor by ID.
         
@@ -28,16 +25,16 @@ class DoctorService:
             doctor_id (int): The ID of the doctor to retrieve.
         
         Returns:
-            doctor or None: The doctor instance if found, else None.
+            Doctor or None: The doctor instance if found, else None.
         """
         try:
-            doctor_instance = doctor.get(doctor.id == doctor_id)
+            doctor_instance = Doctor.get(Doctor.id == doctor_id)
             return doctor_instance
         except DoesNotExist:
             return None
 
     @staticmethod
-    def update_doctor(doctor_id: int, name: str = None, specialty: str = None) -> doctor:
+    def update_doctor(doctor_id: int, name: str = None, specialty: str = None) -> Doctor:
         """
         Update an existing doctor by ID.
         
@@ -47,7 +44,7 @@ class DoctorService:
             specialty (str, optional): The new specialty of the doctor.
         
         Returns:
-            doctor or None: The updated doctor instance if successful, else None.
+            Doctor or None: The updated doctor instance if successful, else None.
         """
         doctor_instance = DoctorService.get_doctor_by_id(doctor_id)
         if doctor_instance:
