@@ -12,11 +12,9 @@ Available Routers:
     - patient_router: Router for patient-related routes.
 """
 
-from .doctor_routes import router as doctor_router
-from .patient_routes import router as patient_router
+from app.routes import doctor_routes  
+from app.routes import patient_routes 
 
 # Definir qué routers estarán disponibles para la importación pública
-__all__ = [
-    "doctor_router",
-    "patient_router",
-]
+doctor_router=doctor_routes.router
+patient_router=patient_routes.router
