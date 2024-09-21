@@ -17,9 +17,10 @@ Each route uses the `PatientService` to interact with the
 business logic related to patients.
 """
 
+from app.services.patient_service import PatientService
+from app.models.patient import Patient
 from fastapi import APIRouter, HTTPException
-from app.services.patient_service import PatientService  # pylint: disable=import-error
-from app.models.patient import Patient  # pylint: disable=import-error
+
 
 router = APIRouter()
 

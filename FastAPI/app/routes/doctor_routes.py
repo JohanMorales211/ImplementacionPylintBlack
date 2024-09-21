@@ -17,9 +17,10 @@ Each route uses the `DoctorService` to interact with the
 business logic related to doctors.
 """
 
-from fastapi import APIRouter, HTTPException
 from app.services.doctor_service import DoctorService  # pylint: disable=import-error
-from app.models.doctor import Doctor  # pylint: disable=import-error
+from app.models.doctor import Doctor
+from fastapi import APIRouter, HTTPException
+
 
 router = APIRouter()
 

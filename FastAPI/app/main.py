@@ -5,8 +5,10 @@ This module creates and configures the FastAPI application instance,
 registers routers for different routes, and includes the API documentation.
 """
 
+from app.routes import doctor_router
+from app.routes import patient_router
 from fastapi import FastAPI
-from app.routes import doctor_router, patient_router  # pylint: disable=import-error
+
 
 app = FastAPI()
 
